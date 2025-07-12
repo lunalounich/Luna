@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لونيش Calculator</title>
+
+  <!-- Facebook Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1704739090150115');
+    fbq('track', 'PageView');
+  </script>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-496437030"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-496437030');
+  </script>
+
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #fff0f5;
+      margin: 0; padding: 20px;
+      color: #333; text-align: center;
+    }
+    h1 {
+      color: #ff69b4;
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+    }
+    .sparkle { font-size: 1.2em; vertical-align: middle; }
+    .note { font-size: 0.9em; color: #555; margin: 4px 0; }
+    .section {
+      background: #fff; padding: 20px;
+      margin: 20px auto; border-radius: 15px;
+      max-width: 500px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, button {
+      width: 90%; margin: 10px auto; padding: 10px;
+      border-radius: 8px; border: 1px solid #ccc;
+      font-size: 1em; display: block; text-align: right;
+    }
+    button {
+      background-color: #ff69b4; color: white;
+      border: none; cursor: pointer;
+    }
+    button:hover { background-color: #d81b60; }
+    #result { font-size: 1.2em; margin-top: 10px; color: #333; }
+  </style>
+</head>
+<body>
+
+  <h1><span class="sparkle">✨</span> لونيش Calculator <span class="sparkle">✨</span></h1>
+
+  <div class="note">أدخل السعر المكتوب بالأسود في شي إن</div>
+  <div class="note">الكوبونات غير محسوبة لأنها خاصة بحسابك الشخصي</div>
+  <div class="note">الخصم: اكتبي الخصم بالنسبة المئوية فقط</div>
+  <div class="note">يجب تغيير إعدادات شي إن إلى: البلد فرنسا والعمله USD</div>
+
+  <div class="section">
+    <h2>الحاسبة</h2>
+    <input type="number" id="usdPrice" placeholder="السعر بالدولار">
+    <input type="number" id="discount" placeholder="نسبة الخصم (%)">
+    <button onclick="calculate()">احسب السعر</button>
+    <div id="result"></div>
+  </div>
+
+  <div class="section">
+    <h2>نموذج الطلب</h2>
+    <input id="name" placeholder="الاسم الكامل">
+    <input id="link" placeholder="رابط المنتج أو رابط السلة">
+    <input id="size" placeholder="المقاس">
+    <select id="type">
+      <option value="">نوع المنتج</option>
+      <option>اكسسوارات</option>
+      <option>ملابس داخلية</option>
+      <option>بيجامات</option>
+      <option>ديكور</option>
+      <option>أدوات منزلية</option>
+      <option>مستلزمات مدرسية</option>
+      <option>ألعاب</option>
+      <option>مستلزمات أطفال</option>
+    </select>
+    <input id="city" placeholder="المدينة">
+    <input id="phone" placeholder="رقم الهاتف">
+    <button onclick="submitOrder()">إرسال الطلب</button>
+  </div>
+
+  <script>
+    function calculate() {
+      const usd = parseFloat(document.getElementById('usdPrice').value) || 0;
+      const discount = parseFloat(document.getElementById('discount').value) || 0;
+      // apply discount: client gets 60%
+      const discountedUSD = usd - (usd * (discount/100) * 0.6);
+      let dzd = discountedUSD * 260;
+      // apply profit margins
+      let margin = 0;
+      if (dzd <= 400) margin = 100;
+      else if (dzd <= 600) margin = 200;
+      else if (dzd <= 2000) margin = 300;
+      else if (dzd <= 5000) margin = 500;
+      else if (dzd <= 8500) margin = dzd * 0.10;
+      else margin = dzd * 0.07;
+      // final and round up to nearest 50
+      let total = dzd + margin;
+      total = Math.ceil(total / 50) * 50;
+      document.getElementById('result').innerText = "💰 السعر النهائي: " + total + " دج";
+      // Facebook Pixel conversion event
+      fbq('track', 'ViewContent');
+    }
+
+    function submitOrder() {
+      const order = 
+        `طلب جديد:\n` +
+        `الاسم: ${document.getElementById('name').value}\n` +
+        `رابط المنتج: ${document.getElementById('link').value}\n` +
+        `المقاس: ${document.getElementById('size').value}\n` +
+        `النوع: ${document.getElementById('type').value}\n` +
+        `المدينة: ${document.getElementById('city').value}\n` +
+        `الهاتف: ${document.getElementById('phone').value}`;
+      navigator.clipboard.writeText(order).then(() => {
+        alert("✅ تم نسخ الطلب! الآن سيتم تحويلك للإنستغرام لإرساله.");
+        fbq('track', 'Lead', {
+          product_type: document.getElementById('type').value,
+          city: document.getElementById('city').value
+        });
+        window.open('https://www.instagram.com/lounich_shop', '_blank');
+      });
+    }
+  </script>
+
+</body>
+</html>
